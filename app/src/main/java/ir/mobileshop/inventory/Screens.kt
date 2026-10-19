@@ -1,16 +1,3 @@
-// تعریف توابع کمکی تاریخ برای رفع ارور کامپایلر
-val today: String get() = JalaliDates.getShamsiToday()
-
-fun format(dateMs: Long): String {
-    val cal = java.util.Calendar.getInstance()
-    cal.timeInMillis = dateMs
-    return String.format("%04d/%02d/%02d", cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH) + 1, cal.get(java.util.Calendar.DAY_OF_MONTH))
-}
-
-fun formatGregorian(dateMs: Long): String {
-    return format(dateMs)
-}
-
 package ir.mobileshop.inventory
 
 import androidx.compose.foundation.background
