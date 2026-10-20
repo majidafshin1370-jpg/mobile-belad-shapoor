@@ -19,16 +19,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Configure Android SDK Path
-        run: |
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          mkdir -p $HOME/android-sdk
-
       - name: Build Debug APK with Gradle
-        run: gradle :app:assembleDebug --stacktrace -Pandroid.defaults.buildfeatures.buildconfig=true
+        run: gradle :app:assembleDebug --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
