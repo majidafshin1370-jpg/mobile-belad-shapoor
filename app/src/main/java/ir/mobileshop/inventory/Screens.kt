@@ -151,14 +151,14 @@ fun InventoryTab(
                     MiniStat("ارزش موجودی", stockValue.faCompact(), Modifier.weight(1.2f))
                     MiniStat("کم‌موجود", lowCount.faNum(), Modifier.weight(1f), if (lowCount > 0) Red else GoodGreen)
                 }
-            }
-            item {
-                val now = remember { java.util.Date() }
-                val jdate = remember { JalaliDates.format(JalaliDates.today()) }
-                WhiteCard(Modifier.padding(horizontal = 16.dp)) {
-                    Text("امروز  $jdate  |  ${JalaliDates.formatGregorian(now)}", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = InkDark)
-                }
-            }
+            val shamsiDate = JalaliDates.getShamsiToday()
+val miladiDate = java.text.SimpleDateFormat("yyyy/MM/dd", java.util.Locale.US).format(java.util.Date())
+Text(
+    text = "امروز: $shamsiDate  |  میلادی: $miladiDate",
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+)
+  }
             item {
                 Column(Modifier.padding(horizontal = 16.dp)) {
                     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
