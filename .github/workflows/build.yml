@@ -1,7 +1,7 @@
 name: Build APK
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:      # دکمه‌ی Run workflow
   push:
     branches: [main]
 
@@ -15,24 +15,21 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: 17
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
-
-      - name: Set up Android SDK
+      - name: Setup Android SDK (modern cmdline-tools, no obsolete packages)
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
-      - name: Accept Android SDK licenses
-        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Build debug APK
-        run: gradle :app:assembleDebug --stacktrace --no-daemon
+        run: ./gradlew :app:assembleDebug --stacktrace
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
