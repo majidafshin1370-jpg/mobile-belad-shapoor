@@ -11,25 +11,52 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android SDK (modern cmdline-tools, no obsolete packages)
-        uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
         with:
-          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
+          gradle-version: 8.9
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Locate project root (bulletproof against extra folder wrapping)
+        shell: bash
+        run: |
+          set -e
+          ROOT="$GITHUB_WORKSPACE"
+          # اگر gradlew یا settings.gradle.kts در ریشه نبود، تا عمق 3 جستجو کن
+          if [ ! -f "$ROOT/settings.gradle.kts" ] && [ ! -f "$ROOT/settings.gradle" ]; then
+            FOUND=$(find . -maxdepth 3 -name settings.gradle.kts -o -maxdepth 3 -name settings.gradle | head -n 1)
+            if [ -n "$FOUND" ]; then
+              ROOT="$(cd "$(dirname "$FOUND")" && pwd)"
+            fi
+          fi
+          echo "PROJECT_ROOT=$ROOT" | tee -a "$GITHUB_ENV"
+          echo "Using project root: $ROOT"
+          ls -la "$ROOT"
 
-      - name: Build debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace
+      - name: Build debug APK (gradlew if present, otherwise gradle)
+        shell: bash
+        run: |
+          set -e
+          cd "$PROJECT_ROOT"
+          if [ -f ./gradlew ]; then
+            chmod +x ./gradlew
+            ./gradlew :app:assembleDebug --stacktrace --no-daemon
+          else
+            # gradlew در مخزن نیست: از Gradle نصب‌شده توسط setup-gradle استفاده می‌کنیم
+            gradle :app:assembleDebug --stacktrace --no-daemon
+          fi
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+      - name: Collect APK path
+        shell: bash
+        run: |
+          APK=$(find "$PROJECT_ROOT" -path '*/apk/debug/*.apk' | head -n 1)
+          echo "APK_PATH=$APK" | tee -a "$GITHUB_ENV"
+          echo "APK: $APK"
+
+      - uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: ${{ env.APK_PATH }}
