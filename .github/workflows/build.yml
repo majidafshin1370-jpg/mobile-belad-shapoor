@@ -19,10 +19,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set Android SDK Environment
-        run: |
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "sdk.dir=$HOME/android-sdk" > local.properties
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Build Debug APK with Gradle
         run: gradle :app:assembleDebug --stacktrace
