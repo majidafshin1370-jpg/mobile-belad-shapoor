@@ -1,7 +1,7 @@
 name: Build APK
 
 on:
-  workflow_dispatch:      # دکمه‌ی Run workflow
+  workflow_dispatch:
   push:
     branches: [main]
 
@@ -22,6 +22,16 @@ jobs:
         with:
           packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
-      # gradlew در مخزن نیست؛ خود Gradle نصب می‌شود.
       - name: Set up Gradle
-        uses: gradle/actions/setup-g
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+
+      - name: Build debug APK
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
