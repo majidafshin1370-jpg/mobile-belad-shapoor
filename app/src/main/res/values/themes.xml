@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.PhoneShop" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F1F2F4</item>
+    </style>
+</resources>
