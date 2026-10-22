@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- white rounded phone body -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M43,22 h22 a9,9 0 0 1 9,9 v46 a9,9 0 0 1 -9,9 h-22 a9,9 0 0 1 -9,-9 v-46 a9,9 0 0 1 9,-9 z"/>
+    <!-- light gray display area -->
+    <path android:fillColor="#EDEDED"
+        android:pathData="M42.5,27 h23 a2.5,2.5 0 0 1 2.5,2.5 v43 a2.5,2.5 0 0 1 -2.5,2.5 h-23 a2.5,2.5 0 0 1 -2.5,-2.5 v-43 a2.5,2.5 0 0 1 2.5,-2.5 z"/>
+    <!-- red home indicator pill -->
+    <path android:fillColor="#C0392B"
+        android:pathData="M48,78.5 h12 a1.75,1.75 0 0 1 0,3.5 h-12 a1.75,1.75 0 0 1 0,-3.5 z"/>
+</vector>
